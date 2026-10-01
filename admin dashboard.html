@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#101211">
+  <title>Admin Dashboard | Visual Vibe</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      color-scheme: dark;
+      --canvas: #101211;
+      --surface: #171a18;
+      --surface-raised: #1d211e;
+      --line: #2b302c;
+      --ink: #f1f4ef;
+      --muted: #929991;
+      --green: #b8f36b;
+      --green-dim: #26351b;
+      --orange: #f2a36b;
+      --red: #f07979;
+      --mono: 'DM Mono', monospace;
+      --sans: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; background: var(--canvas); color: var(--ink); font: 14px/1.5 var(--sans); }
+    button, input, select { font: inherit; }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    a { color: inherit; text-decoration: none; }
+    button { color: inherit; }
+    .app { min-height: 100vh; display: grid; grid-template-columns: 242px minmax(0, 1fr); }
+
+    .sidebar { position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; padding: 25px 16px 18px; border-right: 1px solid var(--line); background: #131614; }
+    .brand { display: flex; align-items: center; gap: 11px; padding: 0 9px 28px; }
+    .brand-mark { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 10px; background: var(--green); color: #131711; font-weight: 800; font-size: 13px; }
+    .brand-name { font-weight: 800; letter-spacing: 1.1px; font-size: 13px; }
+    .brand-name span { color: var(--green); }
+    .brand-sub { display: block; margin-top: 1px; color: var(--muted); font: 10px var(--mono); letter-spacing: .4px; }
+    .side-label { padding: 0 10px; margin: 14px 0 8px; color: #727971; font: 10px var(--mono); letter-spacing: 1.3px; text-transform: uppercase; }
+    .side-nav { display: grid; gap: 4px; }
+    .side-link { display: flex; align-items: center; gap: 12px; min-height: 41px; padding: 0 11px; border: 1px solid transparent; border-radius: 7px; color: #aab0a9; transition: .18s ease; }
+    .side-link:hover { color: var(--ink); background: #1b1f1c; }
+    .side-link.active { color: var(--green); border-color: #34422a; background: #20271d; }
+    .side-link svg { width: 17px; height: 17px; flex: none; stroke: currentColor; fill: none; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+    .side-count { margin-left: auto; min-width: 20px; padding: 1px 6px; border-radius: 10px; background: #2a302b; color: #d6ddd4; text-align: center; font: 10px var(--mono); }
+    .sidebar-bottom { margin-top: auto; }
+    .profile { display: flex; align-items: center; gap: 10px; padding: 14px 9px 2px; border-top: 1px solid var(--line); }
+    .avatar { display: grid; place-items: center; width: 34px; height: 34px; flex: none; border: 1px solid #627348; border-radius: 50%; background: #303b29; color: var(--green); font-size: 11px; font-weight: 800; }
+    .profile-name { font-weight: 700; font-size: 12px; }
+    .profile-role { color: var(--muted); font-size: 11px; }
+    .profile-more { margin-left: auto; color: var(--muted); font-size: 18px; }
+
+    .main { min-width: 0; }
+    .topbar { height: 68px; display: flex; align-items: center; justify-content: space-between; padding: 0 38px; border-bottom: 1px solid var(--line); }
+    .breadcrumb { color: var(--muted); font-size: 12px; }
+    .breadcrumb strong { color: #dce2d9; font-weight: 600; }
+    .top-actions { display: flex; align-items: center; gap: 10px; }
+    .icon-button { position: relative; display: grid; place-items: center; width: 36px; height: 36px; padding: 0; border: 1px solid var(--line); border-radius: 7px; background: var(--surface); cursor: pointer; }
+    .icon-button:hover { border-color: #596151; }
+    .icon-button svg { width: 16px; height: 16px; stroke: #b4bcb2; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .notify-dot { position: absolute; top: 7px; right: 7px; width: 6px; height: 6px; border: 1px solid var(--surface); border-radius: 50%; background: var(--green); }
+    .view-site { display: flex; align-items: center; gap: 7px; min-height: 36px; padding: 0 12px; border: 1px solid var(--line); border-radius: 7px; color: #d1d7ce; font-size: 11px; font-weight: 700; }
+    .view-site:hover { border-color: #596151; color: var(--green); }
+    .view-site svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 1.7; }
+    .content { max-width: 1500px; margin: auto; padding: 34px 38px 46px; }
+    .page-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; margin-bottom: 25px; }
+    .overline { margin-bottom: 5px; color: var(--green); font: 10px var(--mono); letter-spacing: 1.5px; text-transform: uppercase; }
+    h1 { margin: 0; font-size: 27px; line-height: 1.2; letter-spacing: 0; }
+    .intro { margin: 7px 0 0; color: var(--muted); font-size: 12px; }
+    .heading-actions { display: flex; gap: 9px; }
+    .button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 38px; padding: 0 13px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: #d4dad2; font-size: 11px; font-weight: 700; cursor: pointer; transition: .18s ease; }
+    .button:hover { border-color: #596151; }
+    .button svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .button-primary { border-color: var(--green); background: var(--green); color: #17200f; }
+    .button-primary:hover { border-color: #d0ff92; background: #d0ff92; }
+
+    .metrics { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+    .metric { min-height: 132px; padding: 17px 18px 15px; border: 1px solid var(--line); border-radius: 7px; background: var(--surface); }
+    .metric-head { display: flex; justify-content: space-between; align-items: center; color: var(--muted); font-size: 11px; }
+    .metric-icon { display: grid; place-items: center; width: 27px; height: 27px; border: 1px solid #353b35; border-radius: 6px; color: var(--green); }
+    .metric-icon svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+    .metric-value { margin-top: 11px; font-size: 27px; line-height: 1.1; font-weight: 700; letter-spacing: 0; }
+    .metric-foot { display: flex; gap: 6px; align-items: center; margin-top: 8px; color: var(--muted); font-size: 10px; }
+    .trend { color: var(--green); font: 10px var(--mono); }
+
+    .overview-grid { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(270px, .85fr); gap: 12px; margin-top: 14px; }
+    .panel { min-width: 0; border: 1px solid var(--line); border-radius: 7px; background: var(--surface); }
+    .panel-heading { min-height: 58px; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 0 17px; border-bottom: 1px solid var(--line); }
+    .panel-title { margin: 0; font-size: 12px; font-weight: 700; }
+    .panel-subtitle { margin-top: 2px; color: var(--muted); font-size: 10px; }
+    .select { min-height: 30px; padding: 0 27px 0 9px; border: 1px solid var(--line); border-radius: 5px; background: #1c201d; color: #b9c0b7; font: 10px var(--mono); }
+    .chart-wrap { padding: 18px 18px 13px; }
+    .chart-summary { display: flex; gap: 9px; align-items: baseline; }
+    .chart-summary strong { font-size: 22px; }
+    .chart-summary span { color: var(--green); font: 10px var(--mono); }
+    .chart { width: 100%; height: 152px; display: block; margin-top: 4px; overflow: visible; }
+    .chart-grid { stroke: #2b302c; stroke-width: 1; }
+    .chart-line { fill: none; stroke: var(--green); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+    .chart-fill { fill: url(#chartFill); }
+    .chart-point { fill: var(--green); stroke: #1c211b; stroke-width: 3; }
+    .chart-labels { display: flex; justify-content: space-between; padding: 0 1px; color: #777f76; font: 9px var(--mono); }
+    .traffic-list { padding: 7px 17px 14px; }
+    .traffic-row { display: grid; grid-template-columns: 1fr auto auto; align-items: center; gap: 12px; min-height: 41px; border-bottom: 1px solid #282d29; }
+    .traffic-row:last-child { border-bottom: 0; }
+    .traffic-label { display: flex; align-items: center; gap: 8px; color: #cbd1c8; font-size: 11px; }
+    .traffic-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); }
+    .traffic-row:nth-child(2) .traffic-dot { background: #e7a873; }
+    .traffic-row:nth-child(3) .traffic-dot { background: #74b7ae; }
+    .traffic-row:nth-child(4) .traffic-dot { background: #8791d2; }
+    .traffic-count { color: var(--muted); font: 10px var(--mono); }
+    .traffic-change { min-width: 43px; color: var(--green); text-align: right; font: 10px var(--mono); }
+    .message-reply { display: grid; gap: 7px; margin-top: 12px; }
+    .message-reply textarea { width: 100%; min-height: 76px; resize: vertical; padding: 9px 10px; border: 1px solid var(--line); border-radius: 5px; outline: 0; background: #101311; color: var(--ink); font: 11px/1.5 var(--sans); }
+    .message-reply textarea:focus { border-color: #718357; }
+    .message-reply textarea::placeholder { color: #737c72; }
+    .message-reply-actions { display: flex; flex-wrap: wrap; gap: 7px; }
+    .message-reply-link { display: inline-flex; align-items: center; min-height: 29px; padding: 0 9px; border: 1px solid #536d3a; border-radius: 5px; background: #27341f; color: var(--green); font-size: 10px; font-weight: 700; }
+    .message-reply-link:hover { border-color: var(--green); }
+    .message-reply-fallback { border-color: var(--line); background: transparent; color: #b9c0b7; }
+
+    .projects-panel { margin-top: 14px; }
+    .projects-heading { flex-wrap: wrap; padding: 13px 16px; }
+    .project-tools { display: flex; align-items: center; gap: 8px; }
+    .search { position: relative; }
+    .search svg { position: absolute; top: 9px; left: 9px; width: 14px; height: 14px; stroke: #828a81; fill: none; stroke-width: 1.8; }
+    .search input { width: 190px; height: 32px; padding: 0 9px 0 30px; border: 1px solid var(--line); border-radius: 5px; outline: 0; background: #1c201d; color: var(--ink); font-size: 10px; }
+    .search input:focus { border-color: #718357; }
+    .filter-tabs { display: flex; gap: 3px; }
+    .filter-tab { min-height: 30px; padding: 0 9px; border: 1px solid transparent; border-radius: 5px; background: transparent; color: var(--muted); font-size: 10px; cursor: pointer; }
+    .filter-tab:hover { color: var(--ink); }
+    .filter-tab.active { border-color: #3b4932; background: #273020; color: var(--green); }
+    .table-scroll { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; text-align: left; white-space: nowrap; }
+    th { height: 36px; padding: 0 15px; border-bottom: 1px solid var(--line); color: #80877f; font: 9px var(--mono); font-weight: 400; letter-spacing: .5px; text-transform: uppercase; }
+    td { height: 58px; padding: 0 15px; border-bottom: 1px solid #252a26; color: #cbd1c9; font-size: 10px; }
+    tbody tr:last-child td { border-bottom: 0; }
+    tbody tr:hover { background: #1a1e1b; }
+    .project-cell { display: flex; align-items: center; gap: 10px; min-width: 205px; }
+    .project-thumb { width: 37px; height: 37px; flex: none; border-radius: 4px; object-fit: cover; background: #252a26; }
+    .project-name { display: block; color: #e6ebe3; font-weight: 700; }
+    .project-type { display: block; margin-top: 2px; color: #818980; font-size: 9px; }
+    .status { display: inline-flex; align-items: center; gap: 6px; padding: 4px 8px; border: 1px solid #3a4930; border-radius: 20px; background: #222c1e; color: #c3ee95; font-size: 9px; }
+    .status::before { width: 5px; height: 5px; border-radius: 50%; background: currentColor; content: ''; }
+    .status.draft { border-color: #54412e; background: #2c241d; color: #edb57d; }
+    .status.review { border-color: #394451; background: #202730; color: #a7c9ea; }
+    .publish-toggle { min-height: 27px; padding: 0 9px; border: 1px solid #536d3a; border-radius: 5px; background: #27341f; color: var(--green); font-size: 9px; font-weight: 700; cursor: pointer; }
+    .publish-toggle:hover { border-color: var(--green); }
+    .publish-toggle.is-published { border-color: #424943; background: transparent; color: #9ba39a; }
+    .publish-toggle.is-published:hover { border-color: #d06e6e; color: #f07979; }
+    .row-menu { width: 28px; height: 28px; border: 1px solid transparent; border-radius: 5px; background: transparent; color: #929991; cursor: pointer; font-size: 18px; }
+    .row-menu:hover { border-color: var(--line); color: white; }
+    .table-footer { min-height: 44px; display: flex; align-items: center; justify-content: space-between; padding: 0 15px; border-top: 1px solid var(--line); color: var(--muted); font-size: 10px; }
+    .page-controls { display: flex; gap: 5px; }
+    .page-control { display: grid; place-items: center; width: 25px; height: 25px; border: 1px solid var(--line); border-radius: 4px; background: #1c201d; color: #b8c0b6; }
+
+    dialog { width: min(440px, calc(100% - 28px)); padding: 0; border: 1px solid #3a413b; border-radius: 8px; background: #171a18; color: var(--ink); box-shadow: 0 25px 80px #0009; }
+    dialog::backdrop { background: #070907bd; backdrop-filter: blur(3px); }
+    .dialog-head { display: flex; align-items: center; justify-content: space-between; padding: 17px 19px; border-bottom: 1px solid var(--line); }
+    .dialog-head h2 { margin: 0; font-size: 15px; }
+    .dialog-close { border: 0; background: transparent; color: var(--muted); cursor: pointer; font-size: 20px; }
+    .form-body { display: grid; gap: 13px; padding: 18px 19px; }
+    .form-field { display: grid; gap: 6px; }
+    .form-field label { color: #bdc4bb; font-size: 10px; font-weight: 700; }
+    .form-field input, .form-field select { width: 100%; height: 37px; padding: 0 10px; border: 1px solid var(--line); border-radius: 5px; outline: 0; background: #101311; color: var(--ink); font-size: 11px; }
+    .form-field input:focus, .form-field select:focus { border-color: #718357; }
+    .dialog-actions { display: flex; justify-content: flex-end; gap: 8px; padding: 0 19px 18px; }
+    .empty-state { padding: 28px; color: var(--muted); text-align: center; }
+    .content-editor { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .editor-section { min-width: 0; padding: 18px; border-bottom: 1px solid var(--line); }
+    .editor-section:nth-child(odd) { border-right: 1px solid var(--line); }
+    .editor-section:last-child { grid-column: 1 / -1; border-right: 0; }
+    .editor-section h3 { margin: 0; font-size: 12px; }
+    .editor-section > p { margin: 4px 0 14px; color: var(--muted); font-size: 10px; }
+    .service-editor { display: grid; gap: 9px; }
+    .service-edit-row { display: grid; grid-template-columns: 68px minmax(100px, .8fr) minmax(150px, 1.5fr) 28px; gap: 8px; align-items: end; }
+    .form-field textarea { width: 100%; min-height: 37px; resize: vertical; padding: 8px 10px; border: 1px solid var(--line); border-radius: 5px; outline: 0; background: #101311; color: var(--ink); font: 11px/1.4 var(--sans); }
+    .form-field textarea:focus { border-color: #718357; }
+    .service-edit-row .form-field label { display: block; }
+    .feature-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 6px; }
+    .feature-option { display: flex; align-items: flex-start; gap: 9px; padding: 10px; border: 1px solid var(--line); border-radius: 5px; color: #cbd1c8; font-size: 10px; cursor: pointer; }
+    .feature-option input { accent-color: var(--green); margin: 2px 0 0; }
+    .about-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    .about-fields .form-field:first-child, .about-fields .form-field:nth-child(3) { grid-column: 1 / -1; }
+    .about-fields textarea { min-height: 76px; }
+    .background-editor { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+    .background-option { min-width: 0; }
+    .background-option img { display: block; width: 100%; aspect-ratio: 4 / 3; margin: 2px 0 5px; border: 1px solid var(--line); border-radius: 5px; object-fit: cover; background: #101311; }
+    .editor-actions { display: flex; align-items: center; justify-content: flex-end; gap: 9px; margin-top: 14px; }
+    .editor-actions .section-save-status { margin-right: auto; color: var(--green); font-size: 10px; }
+
+    @media (max-width: 1000px) {
+      .app { grid-template-columns: 205px minmax(0, 1fr); }
+      .topbar { padding: 0 24px; }
+      .content { padding: 28px 24px 38px; }
+      .metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .overview-grid { grid-template-columns: minmax(0, 1.2fr) minmax(240px, .8fr); }
+      .filter-tabs { order: 3; width: 100%; }
+      .service-edit-row { grid-template-columns: 60px minmax(90px, 1fr) 28px; }
+      .service-edit-row .form-field:nth-child(3) { grid-column: 2; }
+    }
+    @media (max-width: 720px) {
+      .app { display: block; }
+      .sidebar { position: static; width: 100%; height: auto; padding: 12px 14px; border-right: 0; border-bottom: 1px solid var(--line); }
+      .brand { padding: 0 3px 11px; }
+      .side-label, .sidebar-bottom { display: none; }
+      .side-nav { display: flex; gap: 5px; overflow-x: auto; padding-bottom: 1px; }
+      .side-link { min-height: 35px; flex: none; gap: 7px; padding: 0 9px; font-size: 10px; }
+      .side-link svg { width: 14px; height: 14px; }
+      .side-count { display: none; }
+      .topbar { height: 53px; padding: 0 16px; }
+      .topbar .view-site { min-height: 32px; padding: 0 9px; font-size: 10px; }
+      .top-actions { gap: 7px; }
+      .icon-button { width: 32px; height: 32px; }
+      .content { padding: 23px 16px 32px; }
+      .page-heading { align-items: flex-start; flex-direction: column; margin-bottom: 19px; }
+      .heading-actions { width: 100%; }
+      .heading-actions .button { flex: 1; }
+      h1 { font-size: 24px; }
+      .metric { min-height: 119px; padding: 13px; }
+      .metric-value { font-size: 24px; }
+      .overview-grid { grid-template-columns: 1fr; }
+      .chart { height: 135px; }
+      .projects-heading { align-items: flex-start; }
+      .project-tools { flex-wrap: wrap; width: 100%; }
+      .search { flex: 1; min-width: 155px; }
+      .search input { width: 100%; }
+      .filter-tabs { overflow-x: auto; }
+      .filter-tab { flex: none; }
+      th, td { padding-right: 11px; padding-left: 11px; }
+      .content-editor { grid-template-columns: 1fr; }
+      .editor-section:nth-child(odd) { border-right: 0; }
+      .editor-section:last-child { grid-column: auto; }
+      .service-edit-row { grid-template-columns: 52px minmax(0, 1fr) 28px; }
+      .service-edit-row .form-field:nth-child(3) { grid-column: 1 / 3; }
+      .about-fields { grid-template-columns: 1fr; }
+      .about-fields .form-field { grid-column: auto !important; }
+      .background-editor { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 390px) {
+      .metrics { gap: 8px; }
+      .metric-head { font-size: 10px; }
+      .metric-foot { font-size: 9px; }
+      .page-heading h1 { font-size: 22px; }
+      .breadcrumb { font-size: 10px; }
+    }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; } }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar" aria-label="Admin navigation">
+      <a class="brand" href="hm.html" aria-label="Visual Vibe home">
+        <span><span class="brand-name">VISUAL <span>VIBE</span></span><span class="brand-sub">STUDIO CONTROL</span></span>
+      </a>
+      <div class="side-label">Workspace</div>
+      <nav class="side-nav">
+        <a class="side-link active" href="#overview" aria-current="page"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="11" width="7" height="10" rx="1"/><rect x="3" y="14" width="8" height="7" rx="1"/></svg>Overview</a>
+        <a class="side-link" href="#projects"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M9 4v6"/></svg>Projects<span class="side-count" id="project-count">06</span></a>
+        <a class="side-link" href="#activity"><svg viewBox="0 0 24 24"><path d="M4 19V5m0 14h17M7 15l4-4 3 2 6-7"/></svg>Analytics</a>
+        <a class="side-link" href="#messages"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>Messages<span class="side-count" id="message-count">0</span></a>
+      </nav>
+      <div class="side-label">Studio</div>
+      <nav class="side-nav">
+        <a class="side-link" href="all works.html"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="1"/><rect x="13" y="3" width="8" height="8" rx="1"/><rect x="3" y="13" width="8" height="8" rx="1"/><rect x="13" y="13" width="8" height="8" rx="1"/></svg>Live portfolio</a>
+        <a class="side-link" href="#content-settings"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="m19.4 15 .1.1 1.2 1-1.2 2.1-1.5-.5a8 8 0 0 1-1.8 1l-.3 1.6h-2.4l-.3-1.6a8 8 0 0 1-1.8-1l-1.5.5-1.2-2.1 1.2-1a7 7 0 0 1 0-2l-1.2-1 1.2-2.1 1.5.5a8 8 0 0 1 1.8-1l.3-1.6h2.4l.3 1.6a8 8 0 0 1 1.8 1l1.5-.5 1.2 2.1-1.2 1a7 7 0 0 1-.1 2Z" transform="translate(-1 -1) scale(1.08)"/></svg>Settings</a>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="profile"><span class="avatar">SA</span><span><span class="profile-name">Saheem Ashraf</span><span class="profile-role">           Studio administrator</span></span><span class="profile-more" aria-hidden="true">···</span></div>
+      </div>
+    </aside>
+
+    <main class="main" id="overview">
+      <header class="topbar">
+        <div class="breadcrumb">Workspace <span aria-hidden="true">/</span> <strong>Overview</strong></div>
+        <div class="top-actions">
+          <button class="icon-button" type="button" aria-label="Notifications" title="Notifications"><svg viewBox="0 0 24 24"><path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg><span class="notify-dot"></span></button>
+          <a class="view-site" href="hm.html"><svg viewBox="0 0 24 24"><path d="M14 3h7v7m-1-6-9 9"/><path d="M19 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h6"/></svg>View website</a>
+        </div>
+      </header>
+
+      <div class="content">
+        <section class="page-heading">
+          <div><div class="overline" id="dashboard-date"></div><h1>Admin dashboard</h1><p class="intro">Projects, inquiries, and analytics are stored in this browser only.</p></div>
+          <div class="heading-actions">
+            <button class="button" id="export-button" type="button"><svg viewBox="0 0 24 24"><path d="M12 3v12m-5-5 5 5 5-5M5 17v4h14v-4"/></svg>Export report</button>
+            <button class="button button-primary" id="add-project" type="button"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>New project</button>
+          </div>
+        </section>
+
+        <section class="metrics" aria-label="Studio metrics">
+          <article class="metric"><div class="metric-head">Website visits<span class="metric-icon"><svg viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg></span></div><div class="metric-value" id="portfolio-views">0</div><div class="metric-foot"><span class="trend" id="portfolio-views-trend">No history yet</span></div></article>
+          <article class="metric"><div class="metric-head">Active projects<span class="metric-icon"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M9 4v6"/></svg></span></div><div class="metric-value" id="active-projects">0</div><div class="metric-foot"><span class="trend" id="active-projects-foot">0 published</span><span>across <span id="project-categories">0</span> categories</span></div></article>
+          <article class="metric"><div class="metric-head">Client inquiries<span class="metric-icon"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></span></div><div class="metric-value" id="client-inquiries">0</div><div class="metric-foot"><span class="trend" id="inquiries-trend">0 this month</span></div></article>
+          <article class="metric"><div class="metric-head">Engagement rate<span class="metric-icon"><svg viewBox="0 0 24 24"><path d="M4 19V5m0 14h17M7 15l4-4 3 2 6-7"/></svg></span></div><div class="metric-value" id="engagement-rate">0%</div><div class="metric-foot"><span id="engagement-foot">Engaged sessions / sessions</span></div></article>
+        </section>
+
+        <section class="overview-grid" id="activity" aria-label="Analytics overview">
+          <article class="panel">
+            <div class="panel-heading"><div><h2 class="panel-title">Audience overview</h2><div class="panel-subtitle">Recorded public page visits</div></div><select class="select" id="analytics-range" aria-label="Analytics date range"><option value="7">Last 7 days</option><option value="30">Last 30 days</option><option value="90">Last 90 days</option></select></div>
+            <div class="chart-wrap"><div class="chart-summary"><strong id="range-views">0</strong><span id="range-label">visits in 7 days</span></div>
+              <svg class="chart" id="visits-chart" viewBox="0 0 640 170" role="img" aria-label="Recorded visits for the selected date range">
+                <defs><linearGradient id="chartFill" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#b8f36b" stop-opacity=".2"/><stop offset="1" stop-color="#b8f36b" stop-opacity="0"/></linearGradient></defs>
+                <path class="chart-grid" d="M0 20H640M0 62H640M0 104H640M0 146H640"/>
+                <path class="chart-fill" id="chart-fill" d=""/>
+                <path class="chart-line" id="chart-line" d=""/>
+                <g id="chart-points"></g>
+              </svg>
+              <div class="chart-labels" id="chart-labels"></div>
+            </div>
+          </article>
+          <article class="panel">
+            <div class="panel-heading"><div><h2 class="panel-title">Traffic sources</h2><div class="panel-subtitle">Where visitors find your work</div></div><button class="icon-button" type="button" aria-label="More traffic options"><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></svg></button></div>
+            <div class="traffic-list" id="traffic-sources"></div>
+          </article>
+        </section>
+
+        <section class="panel projects-panel" id="content-settings">
+          <div class="panel-heading"><div><h2 class="panel-title">Site content</h2><div class="panel-subtitle">Edit what visitors see on the homepage</div></div></div>
+          <div class="content-editor">
+            <section class="editor-section"><h3>Core services</h3><p>Add, remove, or update the services shown on the homepage.</p><div id="service-editor" class="service-editor"></div><button class="button" id="add-service" type="button" style="margin-top: 12px">Add service</button><div class="editor-actions"><span class="section-save-status" role="status" aria-live="polite"></span><button class="button" id="restore-services" type="button">Restore default</button><button class="button button-primary" id="save-services" type="button">Save changes</button></div></section>
+            <section class="editor-section"><h3>Featured works</h3><p>Choose published projects for the homepage feature section.</p><div id="featured-projects" class="feature-list"></div><div class="editor-actions"><span class="section-save-status" role="status" aria-live="polite"></span><button class="button" id="restore-featured" type="button">Restore default</button><button class="button button-primary" id="save-featured" type="button">Save changes</button></div></section>
+            <section class="editor-section"><h3>Background images</h3><p>Upload up to four images for the site-wide mosaic. Images are optimized when saved.</p><div id="background-editor" class="background-editor"></div><div class="editor-actions"><span class="section-save-status" role="status" aria-live="polite"></span><button class="button" id="restore-backgrounds" type="button">Restore default</button><button class="button button-primary" id="save-backgrounds" type="button">Save changes</button></div></section>
+            <section class="editor-section"><h3>About Visual Vibe</h3><p>Update the studio introduction, expertise, and founder quote.</p><div class="about-fields">
+              <label class="form-field"><span>Studio introduction</span><textarea id="about-description" maxlength="500" required></textarea></label>
+              <label class="form-field"><span>Expertise tags (comma separated)</span><input id="about-skills" maxlength="240" required></label>
+              <label class="form-field"><span>Founder quote</span><textarea id="about-quote" maxlength="240" required></textarea></label>
+              <label class="form-field"><span>Founder name</span><input id="founder-name" maxlength="80" required></label>
+            </div><div class="editor-actions"><span class="section-save-status" role="status" aria-live="polite"></span><button class="button" id="restore-about" type="button">Restore default</button><button class="button button-primary" id="save-about" type="button">Save changes</button></div></section>
+          </div>
+        </section>
+
+        <section class="panel projects-panel" id="projects">
+          <div class="panel-heading projects-heading"><div><h2 class="panel-title">Recent projects</h2><div class="panel-subtitle">Manage your creative work</div></div>
+            <button class="button" id="restore-projects" type="button">Restore default</button>
+            <div class="project-tools">
+              <label class="search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg><input id="project-search" type="search" placeholder="Search projects" aria-label="Search projects"></label>
+              <div class="filter-tabs" role="group" aria-label="Filter projects by status"><button class="filter-tab active" data-filter="all" type="button">All</button><button class="filter-tab" data-filter="Published" type="button">Published</button><button class="filter-tab" data-filter="In review" type="button">In review</button><button class="filter-tab" data-filter="Draft" type="button">Drafts</button></div>
+            </div>
+          </div>
+          <div class="table-scroll"><table><thead><tr><th>Project</th><th>Status</th><th>Last updated</th><th>Views</th><th>Owner</th><th>Publish</th></tr></thead>
+            <tbody id="project-rows"></tbody></table></div>
+          <div class="table-footer"><span id="results-count">Showing 6 projects</span><div class="page-controls" aria-label="Pagination"><button class="page-control" type="button" aria-label="Previous page">‹</button><button class="page-control" type="button" aria-label="Current page">1</button><button class="page-control" type="button" aria-label="Next page">›</button></div></div>
+        </section>
+
+        <section class="panel projects-panel" id="messages">
+          <div class="panel-heading projects-heading"><div><h2 class="panel-title">Client messages</h2><div class="panel-subtitle">Messages sent through the contact form</div></div></div>
+          <div id="message-list" class="traffic-list" aria-live="polite"></div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <dialog id="project-dialog">
+    <form id="project-form">
+      <div class="dialog-head"><h2>Add a project</h2><button class="dialog-close" id="close-dialog" type="button" aria-label="Close">×</button></div>
+      <div class="form-body">
+        <div class="form-field"><label for="new-name">Project name</label><input id="new-name" name="name" required maxlength="60" placeholder="e.g. New visual identity"></div>
+        <div class="form-field"><label for="new-category">Category</label><input id="new-category" name="category" required maxlength="40" placeholder="e.g. Branding"></div>
+        <div class="form-field"><label for="new-description">Description</label><input id="new-description" name="description" required maxlength="180" placeholder="A short description for the portfolio"></div>
+        <div class="form-field"><label for="new-website">Live website URL (optional)</label><input id="new-website" name="website" type="url" maxlength="500" placeholder="https://yourwebsite.com"></div>
+        <div class="form-field"><label for="new-image">Project image (optional, large images are optimized automatically)</label><input id="new-image" name="image" type="file" accept="image/*"></div>
+        <div class="form-field"><label for="new-status">Status</label><select id="new-status" name="status"><option>Draft</option><option>In review</option><option>Published</option></select></div>
+      </div>
+      <div class="dialog-actions"><button class="button" id="cancel-dialog" type="button">Cancel</button><button class="button button-primary" type="submit">Add project</button></div>
+    </form>
+  </dialog>
+
+  <script src="portfolio-store.js"></script>
+</body>
+</html>

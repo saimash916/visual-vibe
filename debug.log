@@ -1,0 +1,3 @@
+[0930/070049.417:ERROR:viz_main_impl.cc(184)] Exiting GPU process due to errors during initialization
+[0930/070049.464:ERROR:viz_main_impl.cc(184)] Exiting GPU process due to errors during initialization
+[0930/070049.464:ERROR:browser_gpu_channel_host_factory.cc(139)] Failed to launch GPU process.

@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Visual perfection, pure vibe.</title>
+  <link rel="icon" type="image/png" href="visualvibe.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-color: #0b0b0c;
+      --card-bg: rgba(20, 20, 22, 0.85);
+      --text-color: #f1f1f1;
+      --text-muted: #a0a0a0;
+      --accent-color: #00ff66; /* Electric Green */
+      --accent-glow: rgba(0, 255, 102, 0.25);
+      --border-color: #26262a;
+      --font-main: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      font-family: var(--font-main);
+      line-height: 1.6;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* FULL PAGE POSTER BACKGROUND */
+    .page-bg-mosaic {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+      padding: 15px;
+      opacity: 0.15;
+      filter: grayscale(30%) contrast(110%);
+      z-index: -2;
+      pointer-events: none;
+    }
+
+    .mosaic-tile {
+      background-size: cover;
+      background-position: center;
+      border-radius: 8px;
+      aspect-ratio: 3 / 4;
+      width: 100%;
+      max-width: 100%;
+    }
+
+    .page-bg-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: radial-gradient(circle at center, rgba(11,11,12,0.4) 0%, rgba(11,11,12,0.95) 90%);
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    /* HEADER / NAV */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 100;
+      background: rgba(11, 11, 12, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-color);
+      padding: 0.8rem 5%;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+    }
+
+    .logo {
+      display: flex;
+      align-items:center;
+      flex-direction: row;
+      gap: 0.6rem;
+      min-height: 50px;
+      text-decoration:none;
+      white-space: nowrap;
+      transform: translateX(-4.5rem);
+    }
+
+    .logo img {
+      display: block;
+      max-height: 58px; /* increased from 58px to make logo bigger */
+      width: auto;
+      object-fit: contain;
+      transform: translateY(4px);
+      filter: drop-shadow(0 0 12px rgba(0, 255, 102, 0.2));
+    }
+
+    .logo-text {
+      display: inline-block;
+      font-weight: 800;
+      font-size: 1.7rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text-color);
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .logo-text span {
+      color: var(--accent-color);
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 0.2rem;
+      justify-content: center;
+    }
+
+    header > .cta-btn {
+      justify-self: end;
+    }
+
+    nav a {
+      color: var(--text-muted);
+      text-decoration: none;
+      margin: 0 1.2rem;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+
+    nav a:hover {
+      color: var(--accent-color);
+    }
+
+    .nav-pill {
+      margin-left: 0.4rem;
+      padding: 0.55rem 1rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text-color);
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      transition: all 0.2s ease;
+    }
+
+    .nav-pill:hover {
+      border-color: var(--accent-color);
+      color: var(--accent-color);
+      box-shadow: 0 0 12px var(--accent-glow);
+    }
+
+    .cta-btn {
+      background: var(--accent-color);
+      color: #000;
+      padding: 0.7rem 1.4rem;
+      border-radius: 50px;
+      font-weight: 700;
+      text-decoration: none;
+      display: inline-block;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .cta-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 15px var(--accent-glow);
+    }
+
+    /* HERO SECTION */
+    .hero {
+      min-height: 90vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 9rem 5% 4rem 5%;
+    }
+
+    .hero-content {
+      max-width: 800px;
+      text-align: center;
+    }
+
+    .hero-tagline {
+      display: inline-block;
+      color: var(--accent-color);
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      border: 1px solid var(--accent-color);
+      padding: 0.3rem 1rem;
+      border-radius: 30px;
+    }
+
+    .hero-title {
+      font-size: 3.5rem;
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-desc {
+      color: var(--text-muted);
+      font-size: 1.15rem;
+      margin-bottom: 2rem;
+    }
+
+    /* SECTIONS */
+    section {
+      padding: 5rem 5%;
+    }
+
+    .section-title {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 3rem;
+      letter-spacing: -0.5px;
+    }
+
+    .section-title span {
+      color: var(--accent-color);
+    }
+
+    /* SERVICES */
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .service-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--border-color);
+      padding: 2rem;
+      border-radius: 12px;
+      transition: border-color 0.3s, transform 0.3s;
+    }
+
+    .service-card:hover {
+      border-color: var(--accent-color);
+      transform: translateY(-5px);
+    }
+
+    .service-card h3 {
+      font-size: 1.2rem;
+      margin-top: 1rem;
+    }
+
+    /* PORTFOLIO */
+    .portfolio-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+    }
+
+    .portfolio-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .portfolio-img {
+      width: 100%;
+      height: 320px;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.4s;
+    }
+
+    .portfolio-card:hover .portfolio-img {
+      transform: scale(1.03);
+    }
+
+    .portfolio-info {
+      padding: 1.2rem;
+    }
+
+    .portfolio-info h4 {
+      font-size: 1.1rem;
+    }
+
+    .portfolio-info p {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+
+    /* ABOUT / FOUNDER */
+    .about-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+      background: var(--card-bg);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--border-color);
+      padding: 4rem;
+      border-radius: 20px;
+    }
+
+    .founder-quote {
+      font-size: 1.4rem;
+      font-style: italic;
+      border-left: 3px solid var(--accent-color);
+      padding-left: 1.5rem;
+      margin-top: 1.5rem;
+      color: var(--text-color);
+    }
+
+    .skills-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-top: 1.5rem;
+    }
+
+    .skill-tag {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-color);
+      padding: 0.4rem 0.9rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    /* CONTACT SECTION WITH UNIFORM BUTTONS */
+    .contact-section {
+      text-align: center;
+      padding: 4rem 1rem;
+    }
+
+    .contact-buttons {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1.5rem;
+      margin-top: 2.5rem;
+      flex-wrap: wrap;
+    }
+
+    /* UNIFORM PRIMARY BUTTON STYLE */
+    .action-btn {
+      background: var(--accent-color);
+      color: #000;
+      text-decoration: none;
+      padding: 1rem 2.2rem;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 1.05rem;
+      transition: transform 0.2s, box-shadow 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .action-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 0 20px var(--accent-glow);
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      border-top: 1px solid var(--border-color);
+    }
+
+    @media (max-width: 768px) {
+      .hero-title { font-size: 2.2rem; }
+      .about-container { grid-template-columns: 1fr; padding: 2rem; }
+      .page-bg-mosaic { grid-template-columns: repeat(2, 1fr); }
+      .contact-buttons { flex-direction: column; width: 100%; max-width: 320px; margin-left: auto; margin-right: auto; }
+      .action-btn { width: 100%; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- FULL PAGE BACKGROUND POSTER MOSAIC -->
+  <div class="page-bg-mosaic">
+    <div class="mosaic-tile" style="background-image: url('image_1000.jpg');"></div>
+    <div class="mosaic-tile" style="background-image: url('image_1001.jpg');"></div>
+    <div class="mosaic-tile" style="background-image: url('image_1002.jpg');"></div>
+    <div class="mosaic-tile" style="background-image: url('image_1003.jpg');"></div>
+
+    <div class="mosaic-tile" style="background-image: url('image_1000.jpg');"></div>
+    <div class="mosaic-tile" style="background-image: url('image_1001.jpg');"></div>
+    <div class="mosaic-tile" style="background-image: url('image_1002.jpg');"></div>
+    <div class="mosaic-tile" style="background-image: url('image_1003.jpg');"></div>
+
+    <div class="mosaic-tile" style="background-image: url('image_1000.jpg');"></div>
+    <div class="mosaic-tile" style="background-image: url('image_1001.jpg');"></div>
+    <div class="mosaic-tile" style="background-image: url('image_1002.jpg');"></div>
+    <div class="mosaic-tile" style="background-image: url('image_1003.jpg');"></div>
+
+    <div class="mosaic-tile" style="background-image: url('image_1000.jpg');"></div>
+    <div class="mosaic-tile" style="background-image: url('image_1001.jpg');"></div>
+    <div class="mosaic-tile" style="background-image: url('image_1002.jpg');"></div>
+    <div class="mosaic-tile" style="background-image: url('image_1003.jpg');"></div>
+
+  </div>
+
+  <!-- HEADER -->
+  <header>
+    <div class="logo" aria-label="Visual Vibe logo">
+      <img src="visual vibe.png" alt="Visual Vibe logo">
+      <div class="logo-text">VISUAL <span>VIBE</span></div>
+    </div>
+    <nav>
+      <a href="#services">Services</a>
+      <a href="#works">Works</a>
+      <a href="all works.html">All works</a>
+      <a href="#about">About</a>
+    </nav>
+    <a href="#contact" class="cta-btn">What You Want?</a>
+  </header>
+
+  <!-- HERO SECTION -->
+  <section class="hero">
+    <div class="hero-content">
+      <div class="hero-tagline">Creative Design Studio</div>
+      <h1 class="hero-title">Visual perfection, pure vibe.</h1>
+      <p class="hero-desc">We craft bold visual identities, striking poster art, and creative designs that help brands stand out.</p>
+      <a href="#contact" class="cta-btn">What You Want?</a>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section id="services">
+    <h2 class="section-title">Core <span>Services</span></h2>
+    <div class="services-grid"></div>
+  </section>
+
+  <!-- PORTFOLIO -->
+  <section id="works">
+    <h2 class="section-title">Featured <span>Works</span></h2>
+    <div class="portfolio-grid"></div>
+  </section>
+
+  <!-- ABOUT / FOUNDER -->
+  <section id="about">
+    <div class="about-container">
+      <div>
+        <h2 class="section-title" style="margin-bottom: 1rem;">About <span>Visual Vibe</span></h2>
+        <p data-about-description></p>
+        
+        <div class="skills-list" data-about-skills></div>
+      </div>
+      <div>
+        <div class="founder-quote" data-about-quote></div>
+        <p data-founder-name style="margin-top: 1.5rem; color: var(--text-muted); font-weight: 600;"></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT SECTION WITH MATCHING BUTTONS -->
+  <section id="contact" class="contact-section">
+    <h2 class="section-title" style="margin-bottom: 1rem;">Have a project idea? <br><span>Let's create something amazing.</span></h2>
+    <p style="color: var(--text-muted);">Reach out directly to Saheem Ashraf across any platform below.</p>
+
+    <div class="contact-buttons">
+      <a href="email us.html" class="action-btn">CONTACT US</a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>&copy; 2026 Visual Vibe Studio by Saheem Ashraf. All rights reserved.</p>
+  </footer>
+
+  <script src="portfolio-store.js"></script>
+
+</body>
+</html>
